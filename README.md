@@ -1,5 +1,9 @@
 # DistroClone Cross-Distro
 
+
+<img width="256" height="256" alt="distroClone" src="https://github.com/user-attachments/assets/bbdee7b1-d80f-4c30-875a-7be997810de4" />
+
+
 > Create a bootable, installable ISO from your running Linux system — no matter which distribution you use.
 
 DistroClone Cross-Distro clones a live Linux system into a fully functional ISO image with a guided installer (Calamares). Boot the ISO on any compatible machine and install an exact replica of the source system: packages, configuration, users, filesystem layout, LUKS encryption, and btrfs subvolumes all included.
