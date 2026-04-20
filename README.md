@@ -2,9 +2,7 @@
 
 
 
-<img width="768" height="768" alt="DC-cross-distro" src="https://github.com/user-attachments/assets/5e2b02fd-5acf-433a-9422-e6aea0988b23" />
-
-
+<img width="480" height="480" alt="DC-cross-distro" src="https://github.com/user-attachments/assets/aaef39cd-6215-402d-bcf1-fdf9de77d693" />
 
 
 
