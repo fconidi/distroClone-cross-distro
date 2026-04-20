@@ -24,7 +24,7 @@ Distributed as a single self-contained **AppImage**. No installation. No depende
 | Arch Linux | arch | mkinitcpio | GRUB (archiso) | ✓ | ✓ |
 | CachyOS | arch | mkinitcpio | GRUB + grub-btrfs | ✓ snapper | ✓ |
 | EndeavourOS | arch | mkinitcpio | GRUB (archiso) | ✓ | ✓ |
-| Garuda Linux | arch | dracut | GRUB | ✓ | ✓ |
+| Garuda Linux | arch | dracut | GRUB | ✓ snapper | ✓ |
 | Manjaro | arch | mkinitcpio | GRUB | ✓ | ✓ |
 | Fedora | fedora | dracut | GRUB2 + BLS | ✓ | ✓ |
 | openSUSE Tumbleweed | opensuse | dracut | GRUB2 + BLS | ✓ snapper | ✓ |
