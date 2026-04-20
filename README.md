@@ -2,7 +2,8 @@
 
 
 
-<img width="256" height="256" alt="distroClone" src="https://github.com/user-attachments/assets/bbdee7b1-d80f-4c30-875a-7be997810de4" />
+<img width="1024" height="1024" alt="DC-cross-distro" src="https://github.com/user-attachments/assets/7f147085-0f78-466f-ab8a-7b7df84364d5" />
+
 
 
 
