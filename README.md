@@ -1,7 +1,10 @@
 # DistroClone Cross-Distro
 
 
+
 <img width="256" height="256" alt="distroClone" src="https://github.com/user-attachments/assets/bbdee7b1-d80f-4c30-875a-7be997810de4" />
+
+
 
 
 > Create a bootable, installable ISO from your running Linux system — no matter which distribution you use.
@@ -13,6 +16,17 @@ Distributed as a single self-contained **AppImage**. No installation. No depende
 ---
 
 ## Supported Distributions
+
+
+<img width="256" height="166" alt="opensuse" src="https://github.com/user-attachments/assets/48620bc5-11e6-4ac5-96ad-d007a5b0e719" />
+<img width="256" height="256" alt="manjaro" src="https://github.com/user-attachments/assets/3d72d9be-5658-4984-a774-33f5c6722267" />
+<img width="256" height="256" alt="Garuda" src="https://github.com/user-attachments/assets/7bafaaa1-8e10-46fb-92bd-d3b85f1308eb" />
+<img width="256" height="141" alt="fedora" src="https://github.com/user-attachments/assets/72f974a9-3904-4515-8a8a-3ef713e0a2a9" />
+<img width="256" height="250" alt="EndeavourOS-logo" src="https://github.com/user-attachments/assets/529bafbb-cfcb-47e0-b1f7-71ab94bb8a94" />
+<img width="256" height="256" alt="cachyos" src="https://github.com/user-attachments/assets/019572d4-11de-4e55-88dc-c03d1b5e4231" />
+<img width="256" height="256" alt="archlinux" src="https://github.com/user-attachments/assets/98a454a1-a0e7-41bd-b4d0-ab8997b9ebe6" />
+
+
 
 | Distribution | Family | Initramfs | Bootloader | btrfs | LUKS |
 |---|---|---|---|---|---|
