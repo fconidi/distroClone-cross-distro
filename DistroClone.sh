@@ -153,7 +153,7 @@ load_lang_en() {
     MSG_TTY_PROCEED_YN="y/n"
 
     # --- Welcome dialog ---
-    MSG_WELCOME_TITLE="DistroClone Universal ISO Builder v1.3.6"
+    MSG_WELCOME_TITLE="DistroClone Universal ISO Builder v1.3.7"
     MSG_WELCOME_HEADING="Welcome to DistroClone"
     MSG_WELCOME_SUBTITLE="Universal Live ISO Builder for distro Debian-based"
     MSG_SYSTEM_DETECTED="System Detected"
@@ -384,7 +384,7 @@ load_lang_it() {
     MSG_TTY_PROCEED_YN="s/n"
 
     # --- Welcome dialog ---
-    MSG_WELCOME_TITLE="DistroClone Creatore Universale ISO v1.3.6"
+    MSG_WELCOME_TITLE="DistroClone Creatore Universale ISO v1.3.7"
     MSG_WELCOME_HEADING="Benvenuto in DistroClone"
     MSG_WELCOME_SUBTITLE="Creatore universale ISO Live per distribuzioni Debian-based"
     MSG_SYSTEM_DETECTED="Sistema Rilevato"
@@ -606,7 +606,7 @@ load_lang_fr() {
     MSG_BTN_NO="Non"
     MSG_TTY_YN="o/N"
     MSG_TTY_PROCEED_YN="o/n"
-    MSG_WELCOME_TITLE="DistroClone Créateur Universel d'ISO v1.3.6"
+    MSG_WELCOME_TITLE="DistroClone Créateur Universel d'ISO v1.3.7"
     MSG_WELCOME_HEADING="Bienvenue dans DistroClone"
     MSG_WELCOME_SUBTITLE="Créateur universel d'ISO Live pour distributions Debian"
     MSG_SYSTEM_DETECTED="Système Détecté"
@@ -795,7 +795,7 @@ load_lang_es() {
     MSG_BTN_NO="No"
     MSG_TTY_YN="s/N"
     MSG_TTY_PROCEED_YN="s/n"
-    MSG_WELCOME_TITLE="DistroClone Creador Universal de ISO v1.3.6"
+    MSG_WELCOME_TITLE="DistroClone Creador Universal de ISO v1.3.7"
     MSG_WELCOME_HEADING="Bienvenido a DistroClone"
     MSG_WELCOME_SUBTITLE="Creador universal de ISO Live para distribuciones Debian"
     MSG_SYSTEM_DETECTED="Sistema Detectado"
@@ -984,7 +984,7 @@ load_lang_de() {
     MSG_BTN_NO="Nein"
     MSG_TTY_YN="j/N"
     MSG_TTY_PROCEED_YN="j/n"
-    MSG_WELCOME_TITLE="DistroClone Universeller ISO-Ersteller v1.3.6"
+    MSG_WELCOME_TITLE="DistroClone Universeller ISO-Ersteller v1.3.7"
     MSG_WELCOME_HEADING="Willkommen bei DistroClone"
     MSG_WELCOME_SUBTITLE="Universeller Live-ISO-Ersteller für Debian-basierte Distributionen"
     MSG_SYSTEM_DETECTED="Erkanntes System"
@@ -1173,7 +1173,7 @@ load_lang_pt() {
     MSG_BTN_NO="Não"
     MSG_TTY_YN="s/N"
     MSG_TTY_PROCEED_YN="s/n"
-    MSG_WELCOME_TITLE="DistroClone Criador Universal de ISO v1.3.6"
+    MSG_WELCOME_TITLE="DistroClone Criador Universal de ISO v1.3.7"
     MSG_WELCOME_HEADING="Bem-vindo ao DistroClone"
     MSG_WELCOME_SUBTITLE="Criador universal de ISO Live para distribuições Debian"
     MSG_SYSTEM_DETECTED="Sistema Detectado"
@@ -1880,10 +1880,10 @@ ISO_DIR="$LIVE_DIR/iso"
 # Live username depends on the distro family
 # (set after distro detection; this is the initial default)
 LIVE_USER="admin"
-LIVE_PASSWORD="root"
+LIVE_PASSWORD="${ROOT_PASSWORD:-root}"
 LIVE_FULLNAME="${DISTRO_NAME} Live User"
 LIVE_HOSTNAME="${LIVE_HOSTNAME:-${DISTRO_ID}}"
-ROOT_PASSWORD="root"
+ROOT_PASSWORD="${ROOT_PASSWORD:-root}"
 
 ############################################
 # [5/30] Cleanup previous mounts (if script was interrupted)
