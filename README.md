@@ -52,6 +52,7 @@ sudo ./distroClone-1.3.6-x86_64.AppImage
 
 The process is interactive. It prints progress at each of its 30 labeled steps, from distribution detection through ISO assembly.
 
+DEFAULT PASSWORD LIVE = root
 ---
 
 ## Architecture
