@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.3.7 — 2026-04-22
+
+### Bug Fix
+
+- **Custom password never applied** — `ROOT_PASSWORD` set by the dialog was overwritten by a hardcoded `ROOT_PASSWORD="root"` assignment in section [4/30], executed after the dialog. Password always defaulted to `root` regardless of user input. Fixed by using `ROOT_PASSWORD="${ROOT_PASSWORD:-root}"` to preserve the value from the dialog.
+
+---
+
 ## v1.3.6 — 2026-04-20
 
 First public release of **DistroClone Cross-Distro** — a ground-up rewrite of the original
