@@ -38,16 +38,16 @@ Distributed as a single self-contained **AppImage**. No installation. No depende
 
 ```bash
 # Download and make executable
-chmod +x distroClone-1.3.6-x86_64.AppImage
+chmod +x distroClone-1.3.7-x86_64.AppImage
 
 # Detect your distribution family (dry run)
-sudo ./distroClone-1.3.6-x86_64.AppImage --detect
+sudo ./distroClone-1.3.7-x86_64.AppImage --detect
 
 # Install required dependencies
-sudo ./distroClone-1.3.6-x86_64.AppImage --install-deps
+sudo ./distroClone-1.3.7-x86_64.AppImage --install-deps
 
 # Run the full clone
-sudo ./distroClone-1.3.6-x86_64.AppImage
+sudo ./distroClone-1.3.7-x86_64.AppImage
 ```
 
 The process is interactive. It prints progress at each of its 30 labeled steps, from distribution detection through ISO assembly.
