@@ -4,7 +4,7 @@
 
 ### Bug Fix
 
-- **Custom password never applied** — `ROOT_PASSWORD` set by the dialog was overwritten by a hardcoded `ROOT_PASSWORD="root"` assignment in section [4/30], executed after the dialog. Password always defaulted to `root` regardless of user input. Fixed by using `ROOT_PASSWORD="${ROOT_PASSWORD:-root}"` to preserve the value from the dialog.
+"Custom password" never applied — `ROOT_PASSWORD` set by the dialog was overwritten by a hardcoded `ROOT_PASSWORD="root"` assignment in section [4/30], executed after the dialog. Password always defaulted to `root` regardless of user input. Fixed by using `ROOT_PASSWORD="${ROOT_PASSWORD:-root}"` to preserve the value from the dialog.
 
 ---
 
