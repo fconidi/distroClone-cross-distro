@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DistroClone Cross-Distro — Post Tecnico Approfondito</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Playfair+Display:wght@700;900&display=swap');
+
+:root {
+  --bg: #0d1117;
+  --bg2: #161b22;
+  --bg3: #1c2128;
+  --border: rgba(48,54,61,0.8);
+  --accent: #1f6feb;
+  --accent2: #388bfd;
+  --green: #3fb950;
+  --orange: #d29922;
+  --red: #f85149;
+  --purple: #bc8cff;
+  --cyan: #39c5cf;
+  --text: #e6edf3;
+  --text2: #8b949e;
+  --text3: #6e7681;
+  --code-bg: #161b22;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 15px;
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+/* ── Header ── */
+.hero {
+  background: linear-gradient(135deg, #0d1117 0%, #0e1929 50%, #0d1117 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 72px 40px 56px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 80% at 50% 0%, rgba(31,111,235,.12) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 60% at 20% 100%, rgba(63,185,80,.04) 0%, transparent 60%);
+}
+.hero-badge {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent2);
+  border: 1px solid rgba(31,111,235,.3);
+  padding: 5px 16px;
+  border-radius: 20px;
+  margin-bottom: 24px;
+  background: rgba(31,111,235,.06);
+}
+.hero h1 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(32px, 5vw, 56px);
+  font-weight: 900;
+  color: #fff;
+  line-height: 1.1;
+  margin-bottom: 12px;
+  position: relative;
+}
+.hero h1 span { color: var(--accent2); }
+.hero .subtitle {
+  font-size: 16px;
+  color: var(--text2);
+  max-width: 680px;
+  margin: 0 auto 32px;
+  line-height: 1.6;
+}
+.meta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.meta-item {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text3);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.meta-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--text3); }
+
+/* ── Layout ── */
+.wrapper { max-width: 860px; margin: 0 auto; padding: 0 24px; }
+
+/* ── Stats bar ── */
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 48px 0;
+}
+.stat {
+  background: var(--bg2);
+  padding: 20px 24px;
+  text-align: center;
+}
+.stat-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--accent2);
+  display: block;
+}
+.stat-label {
+  font-size: 11px;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 4px;
+}
+
+/* ── TOC ── */
+.toc-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 28px 32px;
+  margin-bottom: 56px;
+}
+.toc-card h3 {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 16px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.toc-list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 32px;
+}
+.toc-list li a {
+  color: var(--text2);
+  text-decoration: none;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.15s;
+}
+.toc-list li a:hover { color: var(--accent2); }
+.toc-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text3);
+  width: 20px;
+  flex-shrink: 0;
+}
+
+/* ── Sections ── */
+.section { margin-bottom: 72px; }
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+.section-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent);
+  background: rgba(31,111,235,.1);
+  border: 1px solid rgba(31,111,235,.2);
+  padding: 4px 10px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+.section h2 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.2;
+}
+
+h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 32px 0 12px;
+}
+h4 {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text2);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin: 24px 0 10px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+p { color: var(--text2); margin-bottom: 14px; }
+p strong { color: var(--text); font-weight: 600; }
+
+/* ── Code ── */
+pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 22px;
+  overflow-x: auto;
+  margin: 16px 0 20px;
+  position: relative;
+}
+pre .lang-tag {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text3);
+  border: 1px solid var(--border);
+  padding: 2px 8px;
+  border-radius: 3px;
+}
+code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+  line-height: 1.65;
+  color: var(--text);
+}
+p code, li code {
+  background: rgba(110,118,129,.1);
+  border: 1px solid rgba(110,118,129,.2);
+  border-radius: 3px;
+  padding: 1px 6px;
+  font-size: 12px;
+  color: var(--cyan);
+}
+
+/* Syntax highlight */
+.kw { color: #ff7b72; }   /* keywords */
+.fn { color: #d2a8ff; }   /* functions */
+.st { color: #a5d6ff; }   /* strings */
+.cm { color: #6e7681; font-style: italic; } /* comments */
+.vr { color: #ffa657; }   /* variables */
+.nm { color: #79c0ff; }   /* numbers/constants */
+.op { color: #ff7b72; }   /* operators */
+
+/* ── Diagrams ── */
+.diagram {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  padding: 20px 24px;
+  margin: 16px 0 20px;
+  overflow-x: auto;
+}
+.diagram code { color: var(--text2); font-size: 12px; }
+
+/* ── Tables ── */
+.table-wrap { overflow-x: auto; margin: 16px 0 24px; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+th {
+  background: var(--bg3);
+  padding: 10px 14px;
+  text-align: left;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text3);
+  border-bottom: 1px solid var(--border);
+}
+td {
+  padding: 9px 14px;
+  border-bottom: 1px solid rgba(48,54,61,.5);
+  color: var(--text2);
+  vertical-align: top;
+}
+td code { font-size: 11px; }
+tr:hover td { background: rgba(255,255,255,.02); }
+.badge {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 3px;
+  font-weight: 600;
+  letter-spacing: .5px;
+}
+.badge-green { background: rgba(63,185,80,.12); color: var(--green); border: 1px solid rgba(63,185,80,.2); }
+.badge-blue  { background: rgba(31,111,235,.12); color: var(--accent2); border: 1px solid rgba(31,111,235,.2); }
+.badge-orange{ background: rgba(210,153,34,.12); color: var(--orange); border: 1px solid rgba(210,153,34,.2); }
+.badge-red   { background: rgba(248,81,73,.12);  color: var(--red);    border: 1px solid rgba(248,81,73,.2); }
+.badge-purple{ background: rgba(188,140,255,.12);color: var(--purple); border: 1px solid rgba(188,140,255,.2);}
+
+/* ── Callout ── */
+.callout {
+  display: flex;
+  gap: 14px;
+  padding: 16px 20px;
+  border-radius: 8px;
+  margin: 20px 0;
+  border: 1px solid;
+}
+.callout-info  { background: rgba(31,111,235,.07); border-color: rgba(31,111,235,.25); }
+.callout-warn  { background: rgba(210,153,34,.07); border-color: rgba(210,153,34,.25); }
+.callout-note  { background: rgba(110,118,129,.07); border-color: rgba(110,118,129,.2); }
+.callout-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.callout p { margin: 0; font-size: 13.5px; }
+.callout-info p  { color: #a5c8ff; }
+.callout-warn p  { color: #e3b341; }
+.callout-note p  { color: var(--text2); }
+
+/* ── Architecture diagram ── */
+.arch-diagram {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 28px;
+  margin: 20px 0;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 0;
+  text-align: center;
+}
+.arch-box {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text2);
+  margin: 4px;
+}
+.arch-box.highlight { border-color: var(--accent); color: var(--accent2); background: rgba(31,111,235,.08); }
+.arch-arrow { color: var(--text3); font-size: 18px; padding: 0 8px; }
+
+/* ── Pipeline steps ── */
+.pipeline {
+  position: relative;
+  padding-left: 32px;
+  margin: 20px 0;
+}
+.pipeline::before {
+  content: '';
+  position: absolute;
+  left: 10px;
+  top: 14px;
+  bottom: 14px;
+  width: 1px;
+  background: linear-gradient(180deg, var(--accent), transparent);
+}
+.pipeline-step {
+  position: relative;
+  margin-bottom: 16px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+.pipeline-step::before {
+  content: '';
+  position: absolute;
+  left: -26px;
+  top: 7px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 3px rgba(31,111,235,.15);
+  flex-shrink: 0;
+}
+.step-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--accent);
+  background: rgba(31,111,235,.1);
+  border: 1px solid rgba(31,111,235,.2);
+  padding: 2px 7px;
+  border-radius: 3px;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.step-text { color: var(--text2); font-size: 13.5px; }
+.step-text strong { color: var(--text); }
+
+/* ── File cards ── */
+.file-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+  margin: 20px 0;
+}
+.file-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 18px;
+  transition: border-color 0.15s;
+}
+.file-card:hover { border-color: rgba(31,111,235,.4); }
+.file-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent2);
+  margin-bottom: 4px;
+}
+.file-lines {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text3);
+  margin-bottom: 8px;
+}
+.file-desc { font-size: 12.5px; color: var(--text2); line-height: 1.5; }
+
+/* ── Distro family matrix ── */
+.family-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+  margin: 16px 0;
+}
+.family-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+.family-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.family-distros { font-size: 11.5px; color: var(--text3); line-height: 1.6; }
+.family-arch  .family-name { color: #1793d1; }
+.family-fedora .family-name { color: #3c6eb4; }
+.family-opensuse .family-name { color: #73ba25; }
+
+/* ── Bug fix cards ── */
+.bugfix-list { list-style: none; margin: 16px 0; }
+.bugfix-item {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--red);
+  border-radius: 0 8px 8px 0;
+  padding: 14px 18px;
+  margin-bottom: 10px;
+}
+.bugfix-item.fixed { border-left-color: var(--green); }
+.bugfix-title {
+  font-weight: 600;
+  color: var(--text);
+  font-size: 13.5px;
+  margin-bottom: 4px;
+}
+.bugfix-desc { font-size: 12.5px; color: var(--text2); line-height: 1.5; }
+
+/* ── Footer ── */
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 40px 24px;
+  text-align: center;
+  color: var(--text3);
+  font-size: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 1px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .toc-list { grid-template-columns: 1fr; }
+  .arch-diagram { grid-template-columns: 1fr; }
+  .stats-bar { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ HERO ══ -->
+<div class="hero">
+  <div class="hero-badge">// Analisi Tecnica v1.3.6</div>
+  <h1>DistroClone <span>Cross-Distro</span></h1>
+  <p class="subtitle">
+    Come funziona davvero il framework Bash che clona qualsiasi sistema Linux live
+    in una ISO installabile, con supporto nativo per sei famiglie di distribuzioni.
+  </p>
+  <div class="meta">
+    <div class="meta-item"><div class="meta-dot"></div>~12.000 righe Bash</div>
+    <div class="meta-item"><div class="meta-dot"></div>7+ distro supportate</div>
+    <div class="meta-item"><div class="meta-dot"></div>AppImage v1.3.6</div>
+    <div class="meta-item"><div class="meta-dot"></div>LUKS + btrfs + BLS</div>
+  </div>
+</div>
+
+<div class="wrapper">
+
+<!-- Stats -->
+<div class="stats-bar">
+  <div class="stat"><span class="stat-value">~12K</span><div class="stat-label">Righe Bash</div></div>
+  <div class="stat"><span class="stat-value">9</span><div class="stat-label">File principali</div></div>
+  <div class="stat"><span class="stat-value">7+</span><div class="stat-label">Distro supportate</div></div>
+  <div class="stat"><span class="stat-value">6</span><div class="stat-label">Lingue UI</div></div>
+  <div class="stat"><span class="stat-value">30</span><div class="stat-label">Step pipeline</div></div>
+  <div class="stat"><span class="stat-value">3</span><div class="stat-label">Backend initramfs</div></div>
+</div>
+
+<!-- TOC -->
+<div class="toc-card">
+  <h3>// Indice</h3>
+  <ul class="toc-list">
+    <li><a href="#overview"><span class="toc-num">01</span>Panoramica e design philosophy</a></li>
+    <li><a href="#arch"><span class="toc-num">02</span>Architettura del progetto</a></li>
+    <li><a href="#files"><span class="toc-num">03</span>Struttura dei file</a></li>
+    <li><a href="#pipeline"><span class="toc-num">04</span>Pipeline 30 step</a></li>
+    <li><a href="#families"><span class="toc-num">05</span>Gestione famiglie distro</a></li>
+    <li><a href="#crypto"><span class="toc-num">06</span>Crypto layer: LUKS + btrfs</a></li>
+    <li><a href="#calamares"><span class="toc-num">07</span>Generazione config Calamares</a></li>
+    <li><a href="#grub"><span class="toc-num">08</span>GRUB layer e temi</a></li>
+    <li><a href="#bugfix"><span class="toc-num">09</span>Workaround e bug fix critici</a></li>
+    <li><a href="#appimage"><span class="toc-num">10</span>Build AppImage</a></li>
+  </ul>
+</div>
+
+<!-- ══ 01 OVERVIEW ══ -->
+<div class="section" id="overview">
+  <div class="section-header">
+    <span class="section-num">01</span>
+    <h2>Panoramica e design philosophy</h2>
+  </div>
+
+  <p>
+    DistroClone Cross-Distro nasce da un problema reale: gli strumenti di clonazione Linux esistenti
+    (penguins-eggs, Remastersys, Refracta) sono <strong>mono-famiglia</strong>. Funzionano su Debian,
+    o su Arch, non su entrambi. DistroClone risolve questo con un'architettura
+    <strong>plugin-based</strong> che separa la core pipeline invariante dagli override family-specifici.
+  </p>
+
+  <p>
+    Il progetto è distribuito come <strong>singolo AppImage autocontenuto</strong> (v1.3.6).
+    Non richiede installazione: scarichi, <code>chmod +x</code>, esegui come root.
+    Le dipendenze host vengono installate automaticamente al primo avvio tramite
+    il package manager nativo della distro rilevata.
+  </p>
+
+  <div class="callout callout-info">
+    <span class="callout-icon">💡</span>
+    <p><strong>Idea centrale:</strong> ogni distribuzione Linux, per quanto diversa nella superficie,
+    condivide la stessa struttura di fondo — rootfs + kernel + initramfs + bootloader.
+    DistroClone astrae questa struttura e la impacchetta in una ISO installabile via Calamares,
+    indipendentemente dalla famiglia di partenza.</p>
+  </div>
+
+  <h3>Distro supportate ufficialmente</h3>
+  <div class="family-grid">
+    <div class="family-card family-arch">
+      <div class="family-name">Famiglia Arch</div>
+      <div class="family-distros">ArchLinux · CachyOS · EndeavourOS · Garuda Linux · Manjaro</div>
+    </div>
+    <div class="family-card family-fedora">
+      <div class="family-name">Famiglia Fedora</div>
+      <div class="family-distros">Fedora · AlmaLinux · Rocky Linux · Nobara</div>
+    </div>
+    <div class="family-card family-opensuse">
+      <div class="family-name">Famiglia openSUSE</div>
+      <div class="family-distros">openSUSE Tumbleweed · Leap · SLES</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 02 ARCHITETTURA ══ -->
+<div class="section" id="arch">
+  <div class="section-header">
+    <span class="section-num">02</span>
+    <h2>Architettura del progetto</h2>
+  </div>
+
+  <p>Il progetto si articola in due contesti di esecuzione distinti con responsabilità separate:</p>
+
+  <div class="callout callout-note">
+    <span class="callout-icon">⚙</span>
+    <p><strong>Contesto 1 — Host live:</strong> <code>DistroClone.sh</code> gira sull'host live, clona il rootfs via rsync,
+    assembla squashfs e ISO.<br><br>
+    <strong>Contesto 2 — Chroot Calamares:</strong> <code>calamares-config.sh</code> gira dentro il chroot dell'installazione,
+    configura bootloader, initramfs e servizi del sistema installato.</p>
+  </div>
+
+  <pre><code><span class="cm"># Flusso ad alto livello</span>
+
+AppImage (entry point)
+    │
+    ├── distro-detect.sh        <span class="cm"># Rileva famiglia, installa dipendenze host</span>
+    │
+    └── DistroClone.sh          <span class="cm"># Orchestratore principale (30 step)</span>
+            │
+            ├── rsync /  →  /mnt/distroClone-dest
+            │
+            ├── mksquashfs  →  filesystem.squashfs
+            │
+            └── xorriso     →  distroClone-TIMESTAMP.iso
+                    │
+                    └── [boot della ISO] → Calamares
+                                │
+                                ├── calamares-config.sh     <span class="cm"># Core YAML generator</span>
+                                │       ├── calamares-config-arch.sh
+                                │       └── calamares-config-fedora.sh
+                                │
+                                └── dc-crypto.sh            <span class="cm"># Orchestrator crypto</span>
+                                        ├── dc-grub.sh
+                                        ├── dc-initramfs.sh
+                                        └── dc-grub.sh (rootflags)
+<span class="lang-tag">FLOW</span></code></pre>
+
+  <h3>Separazione delle responsabilità</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>File</th><th>Contesto</th><th>Responsabilità</th><th>Righe</th></tr></thead>
+      <tbody>
+        <tr><td><code>DistroClone.sh</code></td><td><span class="badge badge-blue">HOST LIVE</span></td><td>Pipeline clone + ISO assembly</td><td>~5.500</td></tr>
+        <tr><td><code>distro-detect.sh</code></td><td><span class="badge badge-blue">HOST LIVE</span></td><td>Detection + dipendenze</td><td>~586</td></tr>
+        <tr><td><code>calamares-config.sh</code></td><td><span class="badge badge-orange">CHROOT CAL</span></td><td>Generazione YAML Calamares</td><td>~2.330</td></tr>
+        <tr><td><code>calamares-config-arch.sh</code></td><td><span class="badge badge-orange">CHROOT CAL</span></td><td>Override famiglia Arch</td><td>~646</td></tr>
+        <tr><td><code>calamares-config-fedora.sh</code></td><td><span class="badge badge-orange">CHROOT CAL</span></td><td>Override famiglia Fedora/openSUSE</td><td>~1.842</td></tr>
+        <tr><td><code>dc-crypto.sh</code></td><td><span class="badge badge-orange">CHROOT CAL</span></td><td>LUKS detection + orchestrazione crypto</td><td>~210</td></tr>
+        <tr><td><code>dc-grub.sh</code></td><td><span class="badge badge-orange">CHROOT CAL</span></td><td>GRUB install + BLS + btrfs rootflags</td><td>~465</td></tr>
+        <tr><td><code>dc-initramfs.sh</code></td><td><span class="badge badge-orange">CHROOT CAL</span></td><td>initramfs multi-backend</td><td>~130</td></tr>
+        <tr><td><code>build-appimage.sh</code></td><td><span class="badge badge-green">BUILD</span></td><td>Assembly AppImage finale</td><td>~472</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══ 03 FILES ══ -->
+<div class="section" id="files">
+  <div class="section-header">
+    <span class="section-num">03</span>
+    <h2>Struttura dei file principali</h2>
+  </div>
+
+  <h3>DistroClone.sh — L'orchestratore</h3>
+  <p>
+    Il file più grande del progetto (~5.500 righe) coordina l'intera pipeline.
+    Gestisce l'interfaccia utente (YAD/Zenity con fallback TTY), i messaggi multilingua
+    (EN/IT/FR/ES/DE/PT) e i 30 step del processo di clonazione.
+  </p>
+  <p>
+    Un aspetto critico: contiene due <strong>heredoc CHROOT</strong> enormi
+    (<code>CHROOT_ARCH_EOF</code> e <code>CHROOT_FEDORA_EOF</code>, >1.000 righe ciascuno)
+    che vengono eseguiti dentro il chroot Calamares durante l'installazione.
+    Questo è il meccanismo con cui il codice host raggiunge il sistema installato.
+  </p>
+
+  <pre><code><span class="cm"># Esempio: heredoc CHROOT_ARCH_EOF (semplificato)</span>
+<span class="vr">DC_CHROOT</span>=<span class="st">"$(cat << 'CHROOT_ARCH_EOF'
+#!/bin/bash
+# Questo codice gira DENTRO il chroot del sistema installato
+
+# 1. Rimuove hook live da mkinitcpio
+sed -i '/archiso/d' /etc/mkinitcpio.conf
+
+# 2. Genera initramfs pulito
+mkinitcpio -P
+
+# 3. Installa dc-firstboot.service
+...
+CHROOT_ARCH_EOF
+)"</span>
+<span class="lang-tag">BASH</span></code></pre>
+
+  <h3>distro-detect.sh — Il cervello del rilevamento</h3>
+  <p>
+    Implementa una cascata di detection a 4 livelli:
+    file <code>/etc/os-release</code> (campo <code>ID</code>),
+    campo <code>ID_LIKE</code>, file sentinella (<code>/etc/arch-release</code> ecc.),
+    e infine package manager detection come ultimo fallback.
+  </p>
+
+  <div class="callout callout-warn">
+    <span class="callout-icon">⚠</span>
+    <p><strong>Caso speciale Garuda:</strong> Garuda usa <code>dracut</code> come initramfs sull'host,
+    ma la ISO clonata deve usare <code>mkinitcpio-archiso</code> (come tutta la famiglia Arch).
+    La detection distingue <code>DC_INITRAMFS=dracut</code> (tool host)
+    da <code>DC_LIVE_STACK=archiso</code> (stack finale ISO) — sono variabili diverse.</p>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Famiglia</th><th>Distro mappate</th><th>Package Manager</th><th>Live User</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="badge badge-blue">ARCH</span></td>
+          <td>arch, manjaro, endeavouros, garuda, arcolinux, artix, cachyos, biglinux</td>
+          <td><code>pacman</code></td>
+          <td>archie / cachyos</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-orange">FEDORA</span></td>
+          <td>fedora, rhel, centos, almalinux, rocky, nobara, ultramarine, bazzite</td>
+          <td><code>dnf</code></td>
+          <td>liveuser</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-green">OPENSUSE</span></td>
+          <td>opensuse*, sles, sled, tumbleweed, leap</td>
+          <td><code>zypper</code></td>
+          <td>linux</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-purple">DEBIAN</span></td>
+          <td>debian, ubuntu, mint, kali, popos, zorin, elementary, mx, antix</td>
+          <td><code>apt</code></td>
+          <td>admin</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>calamares-config.sh — Il generatore YAML</h3>
+  <p>
+    Gira esclusivamente nel chroot Calamares durante l'installazione.
+    Scrive dinamicamente tutti i file di configurazione Calamares (<code>.conf</code> YAML)
+    basandosi sulla famiglia rilevata, sul filesystem scelto e sulle opzioni di cifratura.
+  </p>
+
+  <p><strong>Moduli Calamares generati a runtime:</strong></p>
+  <pre><code>unpackfs.conf        <span class="cm"># Source squashfs + exclude patterns</span>
+mount.conf           <span class="cm"># extraMounts: proc, sys, dev, run, efivarfs</span>
+fstab.conf           <span class="cm"># Mount options per FS (btrfs: compress=zstd, ext4: discard)</span>
+users.conf           <span class="cm"># doReusePassword, wheel sudoers, password requirements</span>
+partition.conf       <span class="cm"># EFI 300M, btrfs nativo openSUSE, ext4 altrove</span>
+bootloader.conf      <span class="cm"># GRUB/systemd-boot, EFI ID</span>
+services-systemd.conf <span class="cm"># Disabilita servizi live (archiso*, cachyos*, pacman-init)</span>
+displaymanager.conf  <span class="cm"># Rimuove autologin</span>
+shellprocess_*.conf  <span class="cm"># Script custom pre/post install</span>
+<span class="lang-tag">YAML</span></code></pre>
+
+  <p>
+    Una delle parti più complesse è la gestione delle <strong>3 sequenze di esecuzione Calamares</strong>,
+    necessaria perché non tutte le distro hanno tutti i moduli C++ disponibili:
+  </p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Sequenza</th><th>Moduli C++</th><th>Caso d'uso</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge badge-green">FULL C++</span></td><td>partition + mount + unpackfs</td><td>Fedora, openSUSE (kpmcore presente)</td></tr>
+        <tr><td><span class="badge badge-orange">HYBRID</span></td><td>partition (UI) + mountbridge (Python)</td><td>Fallback se mount/unpackfs mancano</td></tr>
+        <tr><td><span class="badge badge-red">SHELLPROCESS</span></td><td>nessuno</td><td>Minimalista: disk-setup via YAD + tutto script</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══ 04 PIPELINE ══ -->
+<div class="section" id="pipeline">
+  <div class="section-header">
+    <span class="section-num">04</span>
+    <h2>La pipeline in 30 step</h2>
+  </div>
+
+  <p>
+    La pipeline è sequenziale e numerata. Ogni step stampa un messaggio localizzato
+    e può fallire con <code>exit 1</code> o procedere con warning non bloccante.
+  </p>
+
+  <div class="pipeline">
+    <div class="pipeline-step">
+      <span class="step-num">01–07</span>
+      <span class="step-text"><strong>Host preparation:</strong> detect famiglia distro, installa dipendenze mancanti via package manager nativo, configura GRUB live, verifica spazio disco (minimo 8GB), seleziona tool GUI (YAD/Zenity/TTY), mostra dialogo di benvenuto con selezione compressione squashfs</span>
+    </div>
+    <div class="pipeline-step">
+      <span class="step-num">08</span>
+      <span class="step-text"><strong>rsync clone:</strong> <code>rsync -aAXH --one-file-system /</code> verso <code>/mnt/distroClone-dest</code> con esclusioni critiche: <code>/dev/*</code>, <code>/proc/*</code>, <code>/sys/*</code>, <code>/run/*</code>, <code>/tmp/*</code>, <code>/home/*</code>, <code>/snap</code>, <code>/.snapshots</code>, cache zypper/apt, log. Flag <code>--one-file-system</code> previene la copia di filesystem montati separatamente.</span>
+    </div>
+    <div class="pipeline-step">
+      <span class="step-num">09–15</span>
+      <span class="step-text"><strong>Cleanup e branding:</strong> rimozione utenti host da <code>/home/*</code> e <code>/root/*</code> (FORCE anche post-rsync), configurazione branding Calamares (logo, welcome, <code>show.qml</code>), copia <code>/etc/skel</code>, configurazione live user con password predefinita, mascheramento servizi live aggressivi</span>
+    </div>
+    <div class="pipeline-step">
+      <span class="step-num">16–20</span>
+      <span class="step-text"><strong>Chroot build:</strong> rigenera initramfs (mkinitcpio / dracut), installa <code>dc-firstboot.service</code>, copia kernel + initramfs in <code>/live/</code>, verifica integrità <code>/boot</code>, gestisce layout BLS per Fedora/openSUSE</span>
+    </div>
+    <div class="pipeline-step">
+      <span class="step-num">21</span>
+      <span class="step-text"><strong>Manual edit (opzionale):</strong> pausa interattiva che permette modifiche manuali al filesystem prima della compressione — utile per debug o personalizzazioni avanzate</span>
+    </div>
+    <div class="pipeline-step">
+      <span class="step-num">22–23</span>
+      <span class="step-text"><strong>Squashfs:</strong> selezione compressione (lz4 ≈5min, xz ≈20min, xz-bcj ≈35min), <code>mksquashfs</code> con <code>-noappend -comp</code></span>
+    </div>
+    <div class="pipeline-step">
+      <span class="step-num">24–28</span>
+      <span class="step-text"><strong>ISO assembly:</strong> generazione <code>grub.cfg</code> live, copia binari EFI, creazione <code>efiboot.img</code> (UEFI), <code>isolinux</code> (BIOS), <code>xorriso</code> per l'assemblaggio ISO finale con flag <code>-isohybrid-mbr</code> per supporto sia BIOS che UEFI</span>
+    </div>
+    <div class="pipeline-step">
+      <span class="step-num">29–30</span>
+      <span class="step-text"><strong>Finalizzazione:</strong> verifica ISO (md5sum + sha256sum), rimozione Calamares e live-boot dall'host (cleanup post-build), output path e dimensione ISO</span>
+    </div>
+  </div>
+
+  <h3>Variabili globali chiave</h3>
+  <pre><code><span class="vr">SOURCE</span>=<span class="st">"/"</span>                          <span class="cm"># Sorgente clone (sempre root host)</span>
+<span class="vr">DEST</span>=<span class="st">"/mnt/distroClone-dest"</span>       <span class="cm"># Destinazione rsync</span>
+<span class="vr">SQUASHFS_FILE</span>=<span class="st">"$DEST/filesystem.squashfs"</span>
+<span class="vr">ISO_LABEL</span>=<span class="st">"DC_$(date +%Y%m%d)"</span>     <span class="cm"># Label ISO (usata in grub.cfg per search)</span>
+<span class="vr">DC_BOOT_PARAMS</span>=<span class="st">"quiet loglevel=3 ..."</span> <span class="cm"># Parametri kernel live</span>
+<span class="vr">DC_VERSION</span>=<span class="st">"1.3.6"</span>                  <span class="cm"># Versione AppImage</span>
+<span class="vr">DC_ROOT_PASSWORD</span>=<span class="st">"distroClone1!"</span>    <span class="cm"># Password root live default</span>
+<span class="lang-tag">BASH</span></code></pre>
+</div>
+
+<!-- ══ 05 FAMILIES ══ -->
+<div class="section" id="families">
+  <div class="section-header">
+    <span class="section-num">05</span>
+    <h2>Gestione cross-distro delle famiglie</h2>
+  </div>
+
+  <p>
+    Il problema principale nel supporto cross-distro non è la clonazione del rootfs
+    (rsync funziona ovunque) ma il <strong>bootloader + initramfs + servizi live</strong>
+    che sono profondamente family-specific. DistroClone risolve questo con un sistema
+    di plugin-override a due livelli.
+  </p>
+
+  <h3>Il plugin pattern</h3>
+  <pre><code><span class="cm"># calamares-config.sh: funzioni "abstract" che i plugin devono implementare</span>
+<span class="fn">dc_set_paths</span>()           <span class="cm"># Popola CAL_MODULES, SQUASHFS_PATH, GRUB_CMD</span>
+<span class="fn">dc_users_conf</span>()          <span class="cm"># Genera users.conf (sudoers, wheel group, password)</span>
+<span class="fn">dc_remove_live_user</span>()    <span class="cm"># Script per rimozione utente live post-install</span>
+<span class="fn">dc_configure_family</span>()   <span class="cm"># Config specifica: mkinitcpio, servizi, firstboot</span>
+<span class="fn">dc_settings_conf</span>()       <span class="cm"># Sequenza exec moduli Calamares</span>
+
+<span class="cm"># I plugin (calamares-config-arch.sh, calamares-config-fedora.sh)</span>
+<span class="cm"># vengono sourciati e sovrascrivono queste funzioni</span>
+<span class="kw">if</span> [ <span class="st">"$DC_FAMILY"</span> = <span class="st">"arch"</span> ]; <span class="kw">then</span>
+    <span class="kw">source</span> calamares-config-arch.sh
+<span class="kw">elif</span> [ <span class="st">"$DC_FAMILY"</span> = <span class="st">"fedora"</span> ] <span class="op">||</span> [ <span class="st">"$DC_FAMILY"</span> = <span class="st">"opensuse"</span> ]; <span class="kw">then</span>
+    <span class="kw">source</span> calamares-config-fedora.sh
+<span class="kw">fi</span>
+<span class="lang-tag">BASH</span></code></pre>
+
+  <h3>Differenze critiche per famiglia</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Aspetto</th><th>Arch family</th><th>Fedora family</th><th>openSUSE family</th></tr></thead>
+      <tbody>
+        <tr><td>initramfs tool</td><td>mkinitcpio</td><td>dracut</td><td>dracut</td></tr>
+        <tr><td>GRUB command</td><td><code>grub-install</code></td><td><code>grub2-install</code></td><td><code>grub2-install</code></td></tr>
+        <tr><td>GRUB config</td><td><code>/boot/grub/grub.cfg</code></td><td><code>/boot/grub2/grub.cfg</code></td><td><code>/boot/grub2/grub.cfg</code></td></tr>
+        <tr><td>BLS entries</td><td>No</td><td>Sì (<code>/boot/loader/entries/</code>)</td><td>Sì</td></tr>
+        <tr><td>LUKS param</td><td><code>cryptdevice=UUID=…</code></td><td><code>rd.luks.uuid=…</code></td><td><code>rd.luks.uuid=…</code></td></tr>
+        <tr><td>btrfs layout</td><td>flat (<code>@snapshots</code>)</td><td>N/A</td><td>nested (<code>@/.snapshots</code>)</td></tr>
+        <tr><td>Snapper post-install</td><td>config preservata</td><td>N/A</td><td>config rimossa + ricreata da firstboot</td></tr>
+        <tr><td>Squashfs path</td><td><code>/run/archiso/bootmnt/arch/x86_64/airootfs.sfs</code></td><td><code>/run/initramfs/live/LiveOS/squashfs.img</code></td><td>variabile (4 path possibili)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Il caso Garuda: doppio stack</h3>
+  <p>
+    Garuda è la distro più complessa da gestire perché usa <strong>dracut sull'host</strong>
+    (invece di mkinitcpio come il resto della famiglia Arch) ma la ISO clonata
+    deve usare <strong>archiso + mkinitcpio</strong> per compatibilità con il live boot stack.
+  </p>
+  <pre><code><span class="cm"># Detection Garuda in distro-detect.sh</span>
+<span class="kw">case</span> <span class="st">"$ID"</span> <span class="kw">in</span>
+    garuda)
+        <span class="vr">DC_FAMILY</span>=<span class="st">"arch"</span>
+        <span class="vr">DC_INITRAMFS</span>=<span class="st">"dracut"</span>    <span class="cm"># Tool host (per diagnostica)</span>
+        <span class="vr">DC_LIVE_STACK</span>=<span class="st">"archiso"</span>  <span class="cm"># Stack ISO finale (sempre archiso)</span>
+        ;;
+<span class="kw">esac</span>
+
+<span class="cm"># Nel chroot CHROOT_ARCH_EOF, per Garuda:</span>
+<span class="cm"># 1. Rimuovi dracut dalla live (potrebbe interferire)</span>
+<span class="cm"># 2. Installa mkinitcpio-archiso hooks</span>
+<span class="cm"># 3. Rigenera initramfs con mkinitcpio -P</span>
+<span class="lang-tag">BASH</span></code></pre>
+</div>
+
+<!-- ══ 06 CRYPTO ══ -->
+<div class="section" id="crypto">
+  <div class="section-header">
+    <span class="section-num">06</span>
+    <h2>Crypto layer: LUKS + btrfs</h2>
+  </div>
+
+  <p>
+    Il crypto layer è il componente più delicato dell'intero progetto.
+    Gira esclusivamente nel chroot Calamares — il che significa che molti comandi
+    normali non funzionano (<code>findmnt</code> mostra l'host, non il target).
+    <code>dc-crypto.sh</code> implementa workaround specifici per questo contesto.
+  </p>
+
+  <h3>LUKS detection a cascata</h3>
+  <pre><code><span class="fn">_dc_detect_crypto</span>() {
+    <span class="cm"># Metodo 1: /dev/mapper/luks-* in /etc/fstab (Calamares standard)</span>
+    <span class="kw">if</span> <span class="fn">grep</span> -q <span class="st">'/dev/mapper/luks-'</span> /etc/fstab; <span class="kw">then</span>
+        <span class="vr">LUKS_UUID</span>=$(<span class="fn">awk</span> ... /etc/fstab)
+        <span class="vr">CRYPTO_TYPE</span>=<span class="st">"luks"</span>; <span class="kw">return</span>
+    <span class="kw">fi</span>
+
+    <span class="cm"># Metodo 2: /etc/crypttab (fstab usa UUID=)</span>
+    <span class="kw">if</span> [ -f /etc/crypttab ]; <span class="kw">then</span>
+        <span class="vr">LUKS_UUID</span>=$(<span class="fn">awk</span> <span class="st">'$1~/^luks-/{print $2}'</span> /etc/crypttab | <span class="fn">sed</span> <span class="st">'s/UUID=//'</span>)
+        ...
+    <span class="kw">fi</span>
+
+    <span class="cm"># Metodo 3: lsblk TYPE=crypt (solo su sistema live, non in chroot)</span>
+    <span class="vr">LUKS_UUID</span>=$(<span class="fn">lsblk</span> -rno TYPE,UUID | <span class="fn">awk</span> <span class="st">'$1=="crypt"{print $2}'</span>)
+}
+<span class="lang-tag">BASH</span></code></pre>
+
+  <h3>Parametri LUKS per famiglia</h3>
+  <p>
+    Un bug storico in DistroClone era l'uso di <code>cryptdevice=</code> (parametro mkinitcpio)
+    anche per Fedora che richiede <code>rd.luks.uuid=</code> (parametro dracut).
+    Oggi i parametri sono distinti per inizramfs backend:
+  </p>
+  <pre><code><span class="cm"># Arch (hook 'encrypt' di mkinitcpio)</span>
+<span class="vr">GRUB_CMDLINE_LINUX</span>=<span class="st">"cryptdevice=UUID=</span><span class="vr">$LUKS_UUID</span><span class="st">:</span><span class="vr">$MAPPER</span><span class="st"> root=/dev/mapper/</span><span class="vr">$MAPPER</span><span class="st">"</span>
+
+<span class="cm"># Fedora/openSUSE (modulo crypt di dracut)</span>
+<span class="vr">GRUB_CMDLINE_LINUX</span>=<span class="st">"rd.luks.uuid=</span><span class="vr">$LUKS_UUID</span><span class="st"> root=/dev/mapper/</span><span class="vr">$MAPPER</span><span class="st">"</span>
+<span class="lang-tag">BASH</span></code></pre>
+
+  <h3>btrfs: due layout, due strategie</h3>
+  <p>
+    Il filesystem btrfs è gestito in modo diverso tra Arch e openSUSE perché usano
+    layout di subvolume incompatibili:
+  </p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Aspetto</th><th>Arch/CachyOS (flat)</th><th>openSUSE (nested)</th></tr></thead>
+      <tbody>
+        <tr><td>Root subvol</td><td><code>@</code></td><td><code>@</code></td></tr>
+        <tr><td>Snapshots path</td><td><code>@snapshots</code> → <code>/.snapshots</code></td><td><code>@/.snapshots</code> → <code>/.snapshots</code></td></tr>
+        <tr><td>Snapper config</td><td>Preservata (grub-btrfs legge natively)</td><td>Rimossa + ricreata da dc-firstboot</td></tr>
+        <tr><td>GRUB snapshot</td><td>grub-btrfs-snapper.service</td><td>grub2-snapper-plugin (menu vuoto — known limitation)</td></tr>
+        <tr><td>dc-firstboot</td><td>Crea /.snapshots se manca, abilita grub-btrfsd</td><td>snapper create-config + zypper install grub2-snapper-plugin</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <pre><code><span class="cm"># Rilevamento subvolume @ per rootflags injection</span>
+<span class="fn">dc_configure_btrfs_rootflags</span>() {
+    <span class="vr">_root_fs</span>=$(<span class="fn">awk</span> <span class="st">'$2=="/" && $1!="none" {print $3}'</span> /etc/fstab | <span class="fn">head</span> -1)
+    [ <span class="st">"$_root_fs"</span> != <span class="st">"btrfs"</span> ] <span class="op">&&</span> <span class="kw">return</span> 0
+
+    <span class="kw">if</span> ! <span class="fn">btrfs</span> subvolume list / 2>/dev/null | <span class="fn">grep</span> -qE <span class="st">'path @$'</span>; <span class="kw">then</span>
+        <span class="kw">return</span> 0  <span class="cm"># btrfs senza @, rootflags non necessario</span>
+    <span class="kw">fi</span>
+
+    <span class="cm"># Inietta rootflags=subvol=@ in tre punti:</span>
+    <span class="cm"># 1. /etc/default/grub (GRUB_CMDLINE_LINUX)</span>
+    <span class="cm"># 2. /etc/kernel/cmdline (BLS Fedora/openSUSE)</span>
+    <span class="cm"># 3. /boot/loader/entries/*.conf (BLS entries, opzioni kernel)</span>
+}
+<span class="lang-tag">BASH</span></code></pre>
+</div>
+
+<!-- ══ 07 CALAMARES ══ -->
+<div class="section" id="calamares">
+  <div class="section-header">
+    <span class="section-num">07</span>
+    <h2>Generazione dinamica della configurazione Calamares</h2>
+  </div>
+
+  <p>
+    Calamares è un installer Linux generico che legge la propria configurazione
+    da file YAML. DistroClone non include questi file statici — li <strong>genera
+    a runtime</strong> dentro il chroot in base alla famiglia rilevata, al filesystem
+    scelto, alla presenza o meno di LUKS, e ai moduli C++ disponibili.
+  </p>
+
+  <h3>Emergency fstab repair</h3>
+  <p>
+    Su layout btrfs complessi, Calamares a volte genera un <code>/etc/fstab</code>
+    incompleto (mancano i subvolumi secondari). DistroClone implementa un repair
+    automatico post-installazione:
+  </p>
+  <pre><code><span class="cm"># Emergency fstab repair (calamares-config.sh)</span>
+<span class="vr">ROOT_UUID</span>=$(<span class="fn">blkid</span> -s UUID -o value <span class="st">"$ROOT_DEV"</span>)
+
+<span class="cm"># Rileva subvolumi btrfs montati</span>
+<span class="fn">btrfs</span> subvolume list / <span class="op">|</span> <span class="kw">while</span> <span class="fn">read</span> -r id gen parent top path; <span class="kw">do</span>
+    <span class="cm"># Mappa path → mountpoint (@/home → /home, @/var → /var, ecc.)</span>
+    <span class="vr">mountpoint</span>=$(<span class="fn">echo</span> <span class="st">"$path"</span> | <span class="fn">sed</span> <span class="st">'s|^@||; s|^$|/|'</span>)
+    <span class="cm"># Scrivi entry fstab con opzioni corrette</span>
+    <span class="fn">echo</span> <span class="st">"UUID=$ROOT_UUID $mountpoint btrfs subvol=$path,compress=zstd 0 0"</span>
+<span class="kw">done</span> >> /etc/fstab
+<span class="lang-tag">BASH</span></code></pre>
+
+  <h3>Gestione servizi live</h3>
+  <p>
+    Ogni famiglia ha servizi live che devono essere disabilitati nel clone installato.
+    Il caso più delicato è CachyOS, che ha un servizio
+    (<code>cachyos-configure-after-reboot.service</code>) che <strong>sovrascrive
+    <code>/etc/shadow</code></strong> al primo boot, invalidando la password impostata
+    da Calamares:
+  </p>
+  <pre><code><span class="cm"># services-systemd.conf Arch/CachyOS</span>
+disable:
+  - archiso-copy-passwd.service
+  - archiso-reconfiguration.service
+  - cachyos-configure-after-reboot.service   <span class="cm"># CRITICO: sovrascrive shadow!</span>
+  - pacman-init.service
+  - clean-live.service
+
+<span class="cm"># Non basta disable — viene mascherato con symlink /dev/null</span>
+<span class="cm"># altrimenti systemd lo riabilita al preset</span>
+<span class="fn">ln</span> -sf /dev/null \
+    /etc/systemd/system/cachyos-configure-after-reboot.service
+<span class="lang-tag">YAML</span></code></pre>
+</div>
+
+<!-- ══ 08 GRUB ══ -->
+<div class="section" id="grub">
+  <div class="section-header">
+    <span class="section-num">08</span>
+    <h2>GRUB layer: live ISO e clone installato</h2>
+  </div>
+
+  <p>
+    Il GRUB layer si articola in due contesti con comportamenti intenzionalmente diversi:
+  </p>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Contesto</th><th>File</th><th>Tema</th><th>Strategia</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>Live ISO boot</strong></td>
+          <td><code>DistroClone.sh</code></td>
+          <td>Noir Obsidian (custom DC)</td>
+          <td>theme.txt generato, background gradient #050d22→#020509</td>
+        </tr>
+        <tr>
+          <td><strong>Clone installato</strong></td>
+          <td><code>dc-grub.sh</code></td>
+          <td>Tema originale distro</td>
+          <td>GRUB_THEME non toccato — eredita Garuda/CachyOS/openSUSE</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Tema live: Noir Obsidian</h3>
+  <p>
+    Il tema live usa tre font <code>.pf2</code> generati a runtime con <code>grub-mkfont</code>:
+    <strong>DejaVuSerif-Bold 32pt</strong> (elegante, serif) per il nome distro,
+    <strong>DejaVuSans 15pt</strong> per le voci menu,
+    <strong>DejaVuSans 12pt</strong> per i subtitle muted.
+  </p>
+  <pre><code><span class="cm"># theme.txt — Noir Obsidian (live ISO)</span>
+desktop-image: <span class="st">"background.png"</span>    <span class="cm"># gradient #050d22 → #020509</span>
+desktop-color: <span class="st">"#030912"</span>
+
++ label { text = <span class="st">"GRUB Boot Menu"</span>; color = <span class="st">"#2a4070"</span>; font = <span class="st">"DCSmall"</span> }
++ label { text = <span class="st">"${DISTRO_NAME}"</span>; color = <span class="st">"#ffffff"</span>; font = <span class="st">"DCTitle"</span> }
++ label { text = <span class="st">"·  ·  ·"</span>;       color = <span class="st">"#1a3060"</span>; font = <span class="st">"DCSmall"</span> }
+
++ boot_menu {
+    item_color          = <span class="st">"#3a5280"</span>   <span class="cm"># voci non selezionate: blu muted</span>
+    selected_item_color = <span class="st">"#ffffff"</span>   <span class="cm"># selezionata: bianco puro</span>
+    item_height = 38; item_padding = 16
+}
+
++ progress_bar {
+    id = <span class="st">"__timeout__"</span>
+    height = 2; show_text = false   <span class="cm"># ultra sottile, ghost</span>
+    fg_color = <span class="st">"#1a3aaa"</span>; bg_color = <span class="st">"#060e28"</span>
+}
+<span class="lang-tag">GRUB</span></code></pre>
+
+  <h3>GRUB UEFI install: 3 fallback layer</h3>
+  <p>
+    L'installazione UEFI dentro il chroot Calamares è notoriamente fragile perché
+    <code>findmnt</code> non funziona. <code>dc-grub.sh</code> implementa tre metodi
+    in cascata per trovare la partizione EFI:
+  </p>
+  <pre><code><span class="fn">_dc_grub_uefi</span>() {
+    <span class="cm"># Layer 1: /etc/fstab — mount di /boot/efi</span>
+    <span class="kw">if</span> <span class="fn">grep</span> -q <span class="st">'/boot/efi'</span> /etc/fstab; <span class="kw">then</span>
+        <span class="fn">mount</span> /boot/efi 2>/dev/null; ...
+    <span class="kw">fi</span>
+
+    <span class="cm"># Layer 2: lsblk — cerca PARTTYPE EFI o FSTYPE vfat su DISK</span>
+    <span class="vr">EFI_DEV</span>=$(<span class="fn">lsblk</span> -rno NAME,PARTTYPE,FSTYPE <span class="st">"/dev/$DISK"</span> | \
+        <span class="fn">awk</span> <span class="st">'$2=="c12a7328-..."{print $1}'</span>)
+
+    <span class="cm"># Layer 3: blkid globale — cerca PARTTYPE EFI su tutto il sistema</span>
+    <span class="vr">EFI_DEV</span>=$(<span class="fn">blkid</span> -o device | <span class="kw">while</span> <span class="fn">read</span> dev; <span class="kw">do</span>
+        <span class="fn">blkid</span> -s PARTTYPE -o value <span class="st">"$dev"</span> | <span class="fn">grep</span> -qi <span class="st">"c12a7328"</span> <span class="op">&&</span> echo <span class="st">"$dev"</span>
+    <span class="kw">done</span> | <span class="fn">head</span> -1)
+}
+<span class="lang-tag">BASH</span></code></pre>
+</div>
+
+<!-- ══ 09 BUGFIX ══ -->
+<div class="section" id="bugfix">
+  <div class="section-header">
+    <span class="section-num">09</span>
+    <h2>Workaround e bug fix critici</h2>
+  </div>
+
+  <p>
+    Ogni distribuzione presenta comportamenti edge-case che richiedono workaround specifici.
+    Questi sono i fix più significativi implementati nel progetto:
+  </p>
+
+  <ul class="bugfix-list">
+    <li class="bugfix-item fixed">
+      <div class="bugfix-title">CachyOS GDM: "Session never registered" dopo pacman -Syu + reboot</div>
+      <div class="bugfix-desc">
+        <strong>Root cause:</strong> GDM crea <code>/tmp/.X11-unix</code> con ownership <code>gdm-greeter:gdm 1755</code>
+        invece di <code>root:root 1777</code>. XWayland fallisce → gnome-shell SIGABRT → GDM rifiuta la password.<br>
+        <strong>Fix (defense-in-depth a 3 layer):</strong>
+        (L1) <code>/etc/tmpfiles.d/zz-dc-x11-unix.conf</code> — corregge ownership al boot via systemd-tmpfiles;
+        (L2) <code>dc-x11-unix-enforce.service</code> — enforcement esplicito <em>After=tmpfiles-setup Before=display-manager</em>;
+        (L3) <code>dc-firstboot.service</code> — safety net al primo boot.
+      </div>
+    </li>
+    <li class="bugfix-item fixed">
+      <div class="bugfix-title">Arch: LUKS kernel param sbagliato (cryptdevice= vs rd.luks.uuid=)</div>
+      <div class="bugfix-desc">
+        <strong>Root cause:</strong> il parametro <code>cryptdevice=</code> è specifico di mkinitcpio hook <em>encrypt</em>.
+        Fedora/openSUSE usano dracut che richiede <code>rd.luks.uuid=</code>. Il bug causava kernel panic
+        al boot su sistemi cifrati Fedora.<br>
+        <strong>Fix:</strong> <code>dc-grub.sh</code> seleziona il parametro in base a <code>DC_DISTRO</code>
+        (arch → cryptdevice, fedora/opensuse → rd.luks.uuid).
+      </div>
+    </li>
+    <li class="bugfix-item fixed">
+      <div class="bugfix-title">Fedora: GRUB menu vuoto con GRUB_ENABLE_BLSCFG=false</div>
+      <div class="bugfix-desc">
+        <strong>Root cause:</strong> disabilitare BLS su Fedora causa un GRUB menu con sole "UEFI Firmware Settings"
+        perché <code>grub2-mkconfig</code> di Fedora delega la generazione delle voci kernel al BLS parser.
+        Senza BLS entries in <code>/boot/loader/entries/</code>, il menu è vuoto.<br>
+        <strong>Fix:</strong> mai disabilitare <code>GRUB_ENABLE_BLSCFG</code>. Se le BLS entries mancano,
+        <code>dc-grub.sh</code> le ricrea con <code>kernel-install add</code> o con un writer manuale in bash.
+      </div>
+    </li>
+    <li class="bugfix-item fixed">
+      <div class="bugfix-title">openSUSE: fstab subvolume detection rotto da subshell-pipe</div>
+      <div class="bugfix-desc">
+        <strong>Root cause:</strong> <code>btrfs subvolume list / | while read</code> crea una subshell;
+        le variabili assegnate dentro non sono visibili fuori. Il fstab risultante era vuoto.<br>
+        <strong>Fix:</strong> sostituito con <code>var=$(cmd); for key in $known_keys</code>
+        — nessuna pipe, nessuna subshell.
+      </div>
+    </li>
+    <li class="bugfix-item fixed">
+      <div class="bugfix-title">AppImage: script stale nel squashfs (tee buffering)</div>
+      <div class="bugfix-desc">
+        <strong>Root cause:</strong> <code>calamares-config.sh</code> generato inline via <code>tee</code>
+        in un AppImage usava buffering — l'AppImage leggeva la versione precedente ancora in cache FUSE.<br>
+        <strong>Fix:</strong> AppRun copia tutto in <code>/tmp/distroClone-run-XXXX</code> prima di eseguire,
+        garantendo lettura dal filesystem reale.
+      </div>
+    </li>
+    <li class="bugfix-item fixed">
+      <div class="bugfix-title">openSUSE: dracut hang in chroot durante initramfs</div>
+      <div class="bugfix-desc">
+        <strong>Root cause:</strong> <code>dracut</code> senza <code>--hostonly</code> in chroot scansiona
+        tutto l'hardware reale e si blocca su device non accessibili dal chroot.<br>
+        <strong>Fix:</strong> <code>--hostonly</code> in chroot Calamares — il sistema installato ha LUKS attivo,
+        quindi hostonly è corretto E 10× più veloce.
+      </div>
+    </li>
+  </ul>
+</div>
+
+<!-- ══ 10 APPIMAGE ══ -->
+<div class="section" id="appimage">
+  <div class="section-header">
+    <span class="section-num">10</span>
+    <h2>Build dell'AppImage</h2>
+  </div>
+
+  <p>
+    <code>build-appimage.sh</code> assembla il tutto in un singolo eseguibile AppImage type2.
+    La struttura è un <code>squashfs</code> preceduto dal runtime stub FUSE
+    che monta il filesystem senza installazione.
+  </p>
+
+  <pre><code><span class="cm"># Struttura AppDir</span>
+AppDir/
+  AppRun                              <span class="cm"># Entry point — preserva env display, copia in /tmp</span>
+  usr/share/distroClone/
+    DistroClone.sh
+    distro-detect.sh
+    calamares-config.sh
+    calamares-config-arch.sh
+    calamares-config-fedora.sh
+    dc-crypto.sh
+    dc-initramfs.sh
+    dc-grub.sh
+  usr/share/applications/distroClone.desktop
+  usr/share/icons/hicolor/{48x48,128x128,256x256}/apps/distroClone.png
+
+<span class="cm"># Assembly finale</span>
+<span class="fn">mksquashfs</span> AppDir AppDir.squashfs \
+    -comp zstd -Xcompression-level 19 \
+    -root-owned -noappend
+
+<span class="fn">cat</span> runtime-x86_64 AppDir.squashfs > distroClone-1.3.6-x86_64.AppImage
+<span class="fn">chmod</span> +x distroClone-1.3.6-x86_64.AppImage
+<span class="lang-tag">BASH</span></code></pre>
+
+  <h3>Il ciclo di vita AppRun</h3>
+  <div class="pipeline">
+    <div class="pipeline-step">
+      <span class="step-num">1</span>
+      <span class="step-text">Verifica root (<code>$EUID == 0</code>); se no, rilancia con <code>sudo</code> preservando <code>DISPLAY</code>, <code>WAYLAND_DISPLAY</code>, <code>DBUS_SESSION_BUS_ADDRESS</code>, <code>XAUTHORITY</code></span>
+    </div>
+    <div class="pipeline-step">
+      <span class="step-num">2</span>
+      <span class="step-text"><strong>Copia critica in /tmp</strong> prima di qualsiasi operazione — il mount FUSE del AppImage è instabile se un processo figlio tenta di accedere agli stessi file mentre il parent li sta leggendo</span>
+    </div>
+    <div class="pipeline-step">
+      <span class="step-num">3</span>
+      <span class="step-text">Source <code>distro-detect.sh</code> → <code>dc_bootstrap()</code>: rileva famiglia, verifica dipendenze, installa mancanti con il package manager nativo</span>
+    </div>
+    <div class="pipeline-step">
+      <span class="step-num">4</span>
+      <span class="step-text">Gestisce arg speciali: <code>--version</code> (stampa versione + exit), <code>--detect</code> (mostra info distro + exit), <code>--install-deps</code> (solo installazione dipendenze)</span>
+    </div>
+    <div class="pipeline-step">
+      <span class="step-num">5</span>
+      <span class="step-text">Avvia <code>DistroClone.sh</code> da <code>/tmp/distroClone-run-XXXX</code> — nessuna dipendenza dal mount FUSE</span>
+    </div>
+  </div>
+
+  <h3>Utilizzo</h3>
+  <pre><code><span class="cm"># Download e utilizzo base</span>
+<span class="fn">chmod</span> +x distroClone-1.3.6-x86_64.AppImage
+
+<span class="cm"># Verifica distro rilevata</span>
+<span class="fn">sudo</span> ./distroClone-1.3.6-x86_64.AppImage --detect
+
+<span class="cm"># Installa solo dipendenze</span>
+<span class="fn">sudo</span> ./distroClone-1.3.6-x86_64.AppImage --install-deps
+
+<span class="cm"># Avvia pipeline completa</span>
+<span class="fn">sudo</span> ./distroClone-1.3.6-x86_64.AppImage
+
+<span class="cm"># Con lingua specifica</span>
+<span class="fn">sudo</span> ./distroClone-1.3.6-x86_64.AppImage --lang=it
+
+<span class="cm"># Rebuild AppImage dopo modifiche agli script</span>
+<span class="fn">bash</span> build-appimage.sh
+<span class="lang-tag">BASH</span></code></pre>
+
+  <div class="callout callout-warn">
+    <span class="callout-icon">⚠</span>
+    <p><strong>Workflow obbligatorio dopo modifiche:</strong> qualsiasi modifica a
+    <code>calamares-config.sh</code>, <code>dc-crypto.sh</code>, <code>dc-initramfs.sh</code>
+    o <code>dc-grub.sh</code> richiede <code>bash build-appimage.sh</code> prima del test.
+    L'AppImage è uno snapshot immutabile — modificare i file sorgente non aggiorna l'eseguibile.</p>
+  </div>
+
+  <h3>Matrice funzionalità</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Feature</th><th>Arch</th><th>CachyOS</th><th>Garuda</th><th>Fedora</th><th>openSUSE</th></tr></thead>
+      <tbody>
+        <tr><td>Clone + ISO</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr>
+        <tr><td>LUKS encryption</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr>
+        <tr><td>btrfs + subvolumi</td><td>✅</td><td>✅</td><td>✅</td><td>—</td><td>✅</td></tr>
+        <tr><td>Snapper + GRUB snapshots</td><td>✅</td><td>✅</td><td>—</td><td>—</td><td>⚠ menu vuoto</td></tr>
+        <tr><td>BLS (Boot Loader Spec)</td><td>—</td><td>—</td><td>—</td><td>✅</td><td>✅</td></tr>
+        <tr><td>UEFI + BIOS</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr>
+        <tr><td>GUI YAD/Zenity</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr>
+        <tr><td>Compressione selezionabile</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</div><!-- /wrapper -->
+
+<div class="footer">
+  distroClone-cross-distro v1.3.6 &nbsp;·&nbsp; post tecnico generato 2026-04-18
+</div>
+
+</body>
+</html>
