@@ -345,6 +345,8 @@ load_lang_en() {
     MSG_QML_SERVICES="Setting up users and system services"
     MSG_QML_ALMOST="Almost done!"
     MSG_QML_COMPLETE="Installation will complete shortly"
+    MSG_QML_MULTIDISK_TITLE="Multi-disk setup?"
+    MSG_QML_MULTIDISK_TEXT="To auto-mount /home or data disks after install,\nuse Manual partitioning and assign mount points\nto each disk. 'Erase disk' only configures disk 1."
 
     # --- GRUB menu entries ---
     MSG_GRUB_TRY="Try or Install"
@@ -576,6 +578,8 @@ load_lang_it() {
     MSG_QML_SERVICES="Configurazione utenti e servizi di sistema"
     MSG_QML_ALMOST="Quasi fatto!"
     MSG_QML_COMPLETE="L'installazione verrà completata a breve"
+    MSG_QML_MULTIDISK_TITLE="Setup multi-disco?"
+    MSG_QML_MULTIDISK_TEXT="Per montare automaticamente /home o dischi dati,\nusa il Partizionamento manuale e assegna i mount point\ndi ogni disco. 'Cancella disco' configura solo il disco 1."
 
     # --- GRUB menu entries ---
     MSG_GRUB_TRY="Prova o Installa"
@@ -767,6 +771,8 @@ load_lang_fr() {
     MSG_QML_SERVICES="Configuration des utilisateurs et services système"
     MSG_QML_ALMOST="Presque terminé !"
     MSG_QML_COMPLETE="L'installation se terminera bientôt"
+    MSG_QML_MULTIDISK_TITLE="Configuration multi-disque ?"
+    MSG_QML_MULTIDISK_TEXT="Pour monter automatiquement /home ou des disques de données,\nutilisez le Partitionnement manuel et assignez les points\nde montage. 'Effacer le disque' ne configure que le disque 1."
     MSG_GRUB_TRY="Essayer ou Installer"
     MSG_GRUB_SAFE="Live (Graphiques Sécurisés)"
     MSG_GRUB_INSTALL="Installer"
@@ -956,6 +962,8 @@ load_lang_es() {
     MSG_QML_SERVICES="Configurando usuarios y servicios del sistema"
     MSG_QML_ALMOST="¡Casi listo!"
     MSG_QML_COMPLETE="La instalación se completará en breve"
+    MSG_QML_MULTIDISK_TITLE="¿Configuración multi-disco?"
+    MSG_QML_MULTIDISK_TEXT="Para montar automáticamente /home o discos de datos,\nuse Particionamiento manual y asigne los puntos de montaje\na cada disco. 'Borrar disco' solo configura el disco 1."
     MSG_GRUB_TRY="Probar o Instalar"
     MSG_GRUB_SAFE="Live (Gráficos Seguros)"
     MSG_GRUB_INSTALL="Instalar"
@@ -1145,6 +1153,8 @@ load_lang_de() {
     MSG_QML_SERVICES="Benutzer und Systemdienste werden eingerichtet"
     MSG_QML_ALMOST="Fast fertig!"
     MSG_QML_COMPLETE="Die Installation wird in Kürze abgeschlossen"
+    MSG_QML_MULTIDISK_TITLE="Multi-Festplatten-Setup?"
+    MSG_QML_MULTIDISK_TEXT="Um /home oder Datenfestplatten automatisch einzuhängen,\nverwenden Sie Manuelle Partitionierung und weisen Sie\njedem Laufwerk Einhängepunkte zu. 'Festplatte löschen' konfiguriert nur Laufwerk 1."
     MSG_GRUB_TRY="Testen oder Installieren"
     MSG_GRUB_SAFE="Live (Sichere Grafik)"
     MSG_GRUB_INSTALL="Installieren"
@@ -1334,6 +1344,8 @@ load_lang_pt() {
     MSG_QML_SERVICES="A configurar utilizadores e serviços do sistema"
     MSG_QML_ALMOST="Quase pronto!"
     MSG_QML_COMPLETE="A instalação será concluída em breve"
+    MSG_QML_MULTIDISK_TITLE="Configuração multi-disco?"
+    MSG_QML_MULTIDISK_TEXT="Para montar automaticamente /home ou discos de dados,\nuse Particionamento manual e atribua pontos de montagem\na cada disco. 'Apagar disco' configura apenas o disco 1."
     MSG_GRUB_TRY="Experimentar ou Instalar"
     MSG_GRUB_SAFE="Live (Gráficos Seguros)"
     MSG_GRUB_INSTALL="Instalar"
@@ -2504,11 +2516,11 @@ Presentation {
         Rectangle {
             anchors.fill: parent
             color: "#0a0a36"
-            
+
             Column {
                 anchors.centerIn: parent
                 spacing: 20
-                
+
                 Text {
                     anchors.horizontalCenter: parent.horizontalCenter
                     text: "$MSG_QML_ALMOST"
@@ -2516,12 +2528,40 @@ Presentation {
                     font.bold: true
                     color: "white"
                 }
-                
+
                 Text {
                     anchors.horizontalCenter: parent.horizontalCenter
                     text: "$MSG_QML_COMPLETE"
                     font.pointSize: 16
                     color: "#ecf0f1"
+                }
+            }
+        }
+    }
+
+    Slide {
+        Rectangle {
+            anchors.fill: parent
+            color: "#0a0a36"
+
+            Column {
+                anchors.centerIn: parent
+                spacing: 18
+
+                Text {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text: "💡 $MSG_QML_MULTIDISK_TITLE"
+                    font.pointSize: 22
+                    font.bold: true
+                    color: "#f0c040"
+                }
+
+                Text {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text: "$MSG_QML_MULTIDISK_TEXT"
+                    font.pointSize: 14
+                    color: "#d0e8d0"
+                    horizontalAlignment: Text.AlignHCenter
                 }
             }
         }

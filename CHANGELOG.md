@@ -1,5 +1,17 @@
 # Changelog
 
+## v1.3.8 — 2026-04-27
+
+### Bug Fix
+
+- **ext4 `/home` on separate disk deleted from fstab** — when root is btrfs with `subvol=@` (CachyOS, Garuda, openSUSE) and `/home` is on a separate ext4 disk assigned via Manual partitioning, `dc-post-users.sh` incorrectly removed the `/home` fstab entry, treating it as a malformed btrfs record. Fixed by checking the filesystem type field (column 3 of fstab) before deleting: only btrfs `/home` entries without `subvol=@/home` are removed; ext4/xfs entries from separate disks are preserved.
+
+### Warning Added
+
+- **Multi-disk install requires Manual partitioning** — "Erase disk" mode only configures the selected root disk; additional disks (`/home`, data volumes) are never written to fstab. A new installer slideshow slide now explains this to users during the install phase. Also documented in README Known Limitations.
+
+---
+
 ## v1.3.7 — 2026-04-22
 
 ### Bug Fix
