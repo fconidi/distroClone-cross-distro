@@ -2357,19 +2357,27 @@ ln -sf /etc/systemd/system/dc-firstboot.service \
        /etc/systemd/system/multi-user.target.wants/dc-firstboot.service 2>/dev/null || true
 echo "OK: dc-firstboot.service installato (safety net per /home)"
 
-# ── Pulizia fstab: rimuovi entry /home errate (senza subvol su btrfs) ─────
+# ── Pulizia fstab: rimuovi entry /home btrfs errate (senza subvol su btrfs) ─
 # Se il modulo fstab C++ o il squashfs sorgente ha lasciato un entry /home
 # btrfs senza subvol=@/home, al boot monta il top-level btrfs su /home
-# nascondendo la dir reale dentro @. Rimuoviamo queste entry errate.
+# nascondendo la dir reale dentro @. Rimuoviamo SOLO le entry btrfs errate.
+# IMPORTANTE: NON toccare /home su filesystem separato (ext4/xfs) su disco
+# diverso — quella entry è corretta e deve rimanere in fstab.
 if [ -f /etc/fstab ]; then
     # Rileva se root è btrfs con subvol=@
     _fstab_root_opts="$(awk '$2=="/" {print $4}' /etc/fstab 2>/dev/null | head -1)"
     if echo "$_fstab_root_opts" | grep -q 'subvol=@'; then
-        # Root usa subvol=@ — se /home NON ha subvol=@/home, rimuovilo
+        # Root usa subvol=@ — cerca entry /home senza subvol=@/home
         _home_line="$(grep -E '^UUID=.*[[:space:]]/home[[:space:]]' /etc/fstab 2>/dev/null)"
         if [ -n "$_home_line" ] && ! echo "$_home_line" | grep -q 'subvol=@/home'; then
-            echo "WARN: fstab ha /home btrfs senza subvol=@/home — rimuovo (nasconde @/home)"
-            sed -i '/^UUID=.*[[:space:]]\/home[[:space:]]/d' /etc/fstab
+            # Rimuovi SOLO se è una entry btrfs (senza filesystem separato ext4/xfs)
+            # Un /home su disco ext4/xfs separato è corretto e non va rimosso.
+            if echo "$_home_line" | awk '{print $3}' | grep -qx 'btrfs'; then
+                echo "WARN: fstab ha /home btrfs senza subvol=@/home — rimuovo (nasconde @/home)"
+                sed -i '/^UUID=.*[[:space:]]\/home[[:space:]].*btrfs/d' /etc/fstab
+            else
+                echo "INFO: /home su filesystem non-btrfs ($(echo "$_home_line" | awk '{print $3}')) — mantenuto (disco separato)"
+            fi
         fi
     fi
 fi

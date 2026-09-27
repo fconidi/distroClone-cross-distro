@@ -14,7 +14,7 @@
 #
 # Uso:
 #   chmod +x build-appimage.sh
-#   bash build-appimage.sh [--version 1.3.6] [--output /percorso/output]
+#   bash build-appimage.sh [--version 1.3.8] [--output /percorso/output]
 #
 # Prerequisiti (installati automaticamente se mancanti su Debian):
 #   - mksquashfs (squashfs-tools)
@@ -25,7 +25,7 @@
 set -euo pipefail
 
 # ── Parametri ────────────────────────────────────────────────────────────────
-DC_VERSION="${DC_VERSION:-1.3.6}"
+DC_VERSION="${DC_VERSION:-1.3.8}"
 DC_ARCH="${DC_ARCH:-x86_64}"
 OUTPUT_DIR="${OUTPUT_DIR:-$(pwd)}"
 APPIMAGE_NAME="distroClone-${DC_VERSION}-${DC_ARCH}.AppImage"
@@ -71,7 +71,7 @@ while [[ $# -gt 0 ]]; do
         --arch)    DC_ARCH="$2"; shift 2 ;;
         -h|--help)
             echo "Uso: $0 [--version VERSION] [--output DIR] [--arch ARCH]"
-            echo "  --version  Versione da inserire nell'AppImage (default: 1.3.6)"
+            echo "  --version  Versione da inserire nell'AppImage (default: 1.3.8)"
             echo "  --output   Directory di output (default: pwd)"
             echo "  --arch     Architettura: x86_64 | aarch64 (default: x86_64)"
             exit 0 ;;
@@ -155,7 +155,7 @@ find_script DETECT_SH      "${DETECT_SOURCES[@]}"
 find_script CALCONF_SH     "${CALCONF_SOURCES[@]}"
 
 # Asset sorgente — cerca nella directory sibling distroclone-fedora
-DC_ASSET_SRC="${SCRIPT_DIR}/../distroclone-fedora/distroClone_1.3.6_all"
+DC_ASSET_SRC="${SCRIPT_DIR}/../distroclone-fedora/distroClone_1.3.8_all"
 # Fallback a versione precedente se la corrente non esiste ancora
 [ -d "$DC_ASSET_SRC" ] || DC_ASSET_SRC="${SCRIPT_DIR}/../distroclone-fedora/distroClone_1.3.5_all"
 

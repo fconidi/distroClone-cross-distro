@@ -321,6 +321,10 @@ grep 'your_change' squashfs-root/usr/share/distroClone/calamares-config.sh
 
 ## Known Limitations
 
+- **Multi-disk install — use Manual partitioning**: The "Erase disk" mode in the Calamares installer only operates on the disk chosen for the root filesystem. Additional disks (e.g. a separate `/home` disk on ext4 or a data volume) are **not detected and not added to `/etc/fstab`** automatically. To have `/home`, `/data`, or any other pre-existing disk mount automatically after install, choose **Manual partitioning** in Calamares, select each disk, and assign the desired mount point (e.g. `/home`, `/music`). The installer slideshow includes a tip about this during the install phase.
+
+- **ext4 `/home` on separate disk preserved after btrfs-subvol root** *(fixed in v1.3.8)*: When root is on a btrfs filesystem with `subvol=@` (CachyOS, Garuda, openSUSE) and `/home` is on a separate ext4 disk assigned via Manual partitioning, older versions incorrectly removed the `/home` fstab entry during post-install cleanup — mistaking it for a malformed btrfs entry. Fixed: the cleanup now checks the filesystem type and preserves non-btrfs `/home` entries from separate disks.
+
 - **openSUSE / Garuda GRUB snapshot menu**: the snapshot boot submenu is empty on both distros. Root cause: default btrfs subvolume is top-level ID 5, but `grub2-snapper-plugin` / `grub-btrfs` expect the `snapper-rollback` layout. Snapper itself (CLI + YaST/GUI) works correctly. Submenu can be populated manually after install by running `sudo grub-mkconfig -o /boot/grub/grub.cfg` with snapshots present.
 - **`/etc/fstab` for `@snapshots`**: Calamares does not auto-generate a dedicated fstab entry for the `@snapshots` subvolume. `dc-firstboot.service` creates `/.snapshots` as a child subvolume of `@`, which is functional but differs from the canonical CachyOS peer layout. A separate mount entry can be added manually.
 - **Requires root**: `rsync --one-file-system` and `mksquashfs` need root. The AppImage must be run with `sudo`.
