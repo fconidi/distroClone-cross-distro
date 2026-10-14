@@ -1,10 +1,7 @@
 # DistroClone Cross-Distro
 
 
-
 <img width="480" height="480" alt="DC-cross-distro" src="https://github.com/user-attachments/assets/aaef39cd-6215-402d-bcf1-fdf9de77d693" />
-
-
 
 
 > Create a bootable, installable ISO from your running Linux system — no matter which distribution you use.
@@ -16,7 +13,6 @@ Distributed as a single self-contained **AppImage**. No installation. No depende
 ---
 
 ## Supported Distributions
-
 
 
 | Distribution | Family | Initramfs | Bootloader | btrfs | LUKS |
@@ -88,7 +84,7 @@ DistroClone.sh
 │
 ├─ [9-15] DEST cleanup            → remove live users, autologin, snapper host
 │         snapper state gating    state (openSUSE-only), restore snapper config
-│         (Task 1 / 2026-04-18)   for Arch family via copy-back from SOURCE
+│         for Arch family via copy-back from SOURCE
 │
 ├─ [16-19] Family-specific chroot → CHROOT_ARCH_EOF / CHROOT_FEDORA_EOF
 │    │
@@ -297,11 +293,6 @@ distroClone-1.3.6-x86_64.AppImage
 bash build-appimage.sh
 ```
 
-Verification: extract and grep the new AppImage to confirm changes are inside:
-```bash
-./distroClone-1.3.6-x86_64.AppImage --appimage-extract
-grep 'your_change' squashfs-root/usr/share/distroClone/calamares-config.sh
-```
 
 ---
 
@@ -313,7 +304,7 @@ grep 'your_change' squashfs-root/usr/share/distroClone/calamares-config.sh
 4. **Mount child directories after parents** — in the Calamares fstab/mount sequence, `/boot` must be mounted before `/boot/efi`.
 5. **Never `cmd | while read`** for state-collecting loops — subshell variables are lost after the pipe. Use `var=$(cmd)` + explicit iteration.
 6. **Snapper cleanup is family-gated** — destroying `/etc/snapper/configs/root` is correct for openSUSE (will be recreated by dc-firstboot) but wrong for CachyOS (config must be preserved from source).
-7. **btrfs boot files must be rewritten before grub-install** — `rsync` creates kernel/initramfs files with sparse or multi-extent extent layout that GRUB btrfs drivers (tested: Garuda GRUB 2.14) cannot read, producing "premature end of file". `dc_defrag_boot_files_btrfs()` rewrites all `/boot/vmlinuz-*`, `/boot/initramfs-*.img`, `/boot/*-ucode.img` with `cp --sparse=never` + `btrfs filesystem defragment -r /boot/` before `grub-install`. No-op on non-btrfs.
+7. **btrfs boot files must be rewritten before grub-install** — `rsync` creates kernel/initramfs files with sparse or multi-extent extent layout that GRUB btrfs drivers (Garuda GRUB 2.14) cannot read, producing "premature end of file". `dc_defrag_boot_files_btrfs()` rewrites all `/boot/vmlinuz-*`, `/boot/initramfs-*.img`, `/boot/*-ucode.img` with `cp --sparse=never` + `btrfs filesystem defragment -r /boot/` before `grub-install`. No-op on non-btrfs.
 8. **Never share ESP across clone and original on same machine** — `bootloader-id` must be unique per install (`{Distro}Clone`) and ESP mount must be validated against the target disk (`$DISK`) before writing any EFI file. Global `blkid` ESP search is unsafe in multi-disk setups.
 9. **`partitionLayout` rootfs `filesystem:` must mirror the source `/` filesystem** — derive it at build time via `findmnt -no FSTYPE /` so btrfs-native distros (Garuda / CachyOS / openSUSE) produce btrfs targets and ext4-native distros produce ext4. Omitting the key makes Calamares create the partition as `unformatted` (broken install). Hardcoding a fixed value (e.g. `ext4`) overrides `defaultFileSystemType` and the UI dropdown → every "Erase disk" install produces that filesystem regardless of user choice. `defaultFileSystemType` is set to the same detected value to match the dropdown preselection. Users wanting a different target filesystem must either rebuild DistroClone on a differently-formatted source or use Manual partitioning. The Fedora/openSUSE `/boot` entry keeps `filesystem: "ext4"` hardcoded (BLS requirement).
 
