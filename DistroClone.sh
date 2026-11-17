@@ -4911,7 +4911,6 @@ mksquashfs "$DEST" "$_SQUASHFS_PATH" \
   -e var/cache \
   -e var/tmp \
   -e var/log \
-  -e usr/share/doc \
   -e usr/share/info \
   -e root/.cache \
   -e home/*/.cache \
